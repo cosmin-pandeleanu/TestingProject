@@ -6,7 +6,7 @@ using System;
 namespace TestingProject
 {
     [TestClass]
-    public class LoginTests
+    public class LogoutTests
     {
         private IWebDriver driver;
 
@@ -19,16 +19,18 @@ namespace TestingProject
         private By Login = By.CssSelector("body > div.wrapper > div > div.row.account-login-page > div.col-sm-12.col-md-offset-1.col-md-10.col-lg-offset-2.col-lg-8 > div > div:nth-child(1) > div > form > div:nth-child(5) > div > button");
         private IWebElement BtnLogin => driver.FindElement(Login);
 
-        private By ErrorMessageDisplayed = By.CssSelector("body > div.wrapper > div > div.row.account-login-page > div.col-sm-12.col-md-offset-1.col-md-10.col-lg-offset-2.col-lg-8 > div > div:nth-child(1) > div > div");
-        private IWebElement LblErrorMessage => driver.FindElement(ErrorMessageDisplayed);
+        private By IconAccount = By.XPath("//*[@id='HeaderRow']/div[4]/div/ul/li[1]/a[1]/div/span[2]");
+        private IWebElement BtnIconAccount => driver.FindElement(IconAccount);
+
+        private By Logout = By.CssSelector("#account-layer > a");
+        private IWebElement BtnLogout => driver.FindElement(Logout);
 
         public void LoginApplication(string username, string password)
-        { 
+        {
             TxtEmail.SendKeys(username);
             TxtPassword.SendKeys(password);
             BtnLogin.Click();
         }
-        public string ErrorMessage => LblErrorMessage.Text;
 
         [TestInitialize]
         public void TestInitialize()
@@ -47,25 +49,13 @@ namespace TestingProject
         }
 
         [TestMethod]
-        public void User_Should_Login_Successfully()
+        public void User_Should_Logout_Successfully()
         {
             LoginApplication("test016SM@outlook.com", "test00");
+            BtnIconAccount.Click();
+            BtnLogout.Click();
             IWebElement NameOfUser = driver.FindElement(By.XPath("//*[@id='HeaderRow']/div[4]/div/ul/li[1]/a[1]/span"));
-            Assert.IsTrue(NameOfUser.Text.StartsWith("TEST TEST"));
-        }
-
-        [TestMethod]
-        public void User_Should_Fail_Login_With_WrongEmail()
-        {
-            LoginApplication("test016SM@outlook.com", "parola_gresita");
-            Assert.AreEqual("Adresa dumneavoastră de email / Parola este incorectă. Vă rugăm să încercați din nou.", ErrorMessage);
-        }
-
-        [TestMethod]
-        public void User_Should_Fail_Login_With_WrongPassword()
-        {
-            LoginApplication("test016SM@gmail.com", "test00");
-            Assert.AreEqual("Adresa dumneavoastră de email / Parola este incorectă. Vă rugăm să încercați din nou.", ErrorMessage);
+            Assert.IsTrue(NameOfUser.Text != "TEST TEST");
         }
 
         [TestCleanup]
