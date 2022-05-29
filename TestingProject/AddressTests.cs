@@ -28,36 +28,37 @@ namespace TestingProject
         private By AccountAddress = By.CssSelector("#account-layer > ul > li.account-navigation-list-addresses > a");
         private IWebElement BtnAccountAddress => driver.FindElement(AccountAddress);
 
-        private By EditAddress = By.XPath("/html/body/div[2]/div/div[9]/div/div[3]/div[6]/div/div[1]/div[1]/div/div[1]/div[2]/a");
+        private By EditAddress = By.XPath("/html/body/div[2]/div/div[9]/div/div[3]/div[6]/div/div[1]/div[1]/div[1]/div[1]/div[2]/a[2]");
         public IWebElement BtnEditAddress => driver.FindElement(EditAddress);
+
         private By NewAddress = By.CssSelector("body > div.wrapper > div > div.account-wrapper > div > div.col-md-9.account-content > div.my-account-address-list.shift-content > div > div:nth-child(1) > a");
         private IWebElement BtnNewAddress => driver.FindElement(NewAddress);
 
-        private By DeleteAddress = By.XPath("/html/body/div[2]/div/div[9]/div/div[3]/div[6]/div/div[1]/div[1]/div[2]/div[1]/div[2]/a[1]");
+        private By DeleteAddress = By.XPath("/html/body/div[2]/div/div[9]/div/div[3]/div[6]/div/div[1]/div[1]/div[1]/div[1]/div[2]/a[1]");
         private IWebElement BtnDeleteAddress => driver.FindElement(DeleteAddress);
 
         private By DeleteConfirmation = By.CssSelector("body > div.modal.fade.in > div > div > form > div.modal-footer > button");
         private IWebElement BtnDeleteConfrimation => driver.FindElement(DeleteConfirmation);
         // Add / Edit Form
-        private By LastName = By.Id("address_LastName");
+        private By LastName = By.XPath("/html/body/div[3]/div/div/form/div[1]/div[1]/div/div/fieldset[1]/div[1]/div/div/input");
         private IWebElement TxtLastName => driver.FindElement(LastName);
 
-        private By FirstName = By.Id("address_FirstName");
+        private By FirstName = By.XPath("/html/body/div[3]/div/div/form/div[1]/div[1]/div/div/fieldset[1]/div[2]/div/div/input");
         private IWebElement TxtFirstName => driver.FindElement(FirstName);
 
-        private By PhoneNumber = By.Id("address_PhoneHome");
+        private By PhoneNumber = By.XPath("/html/body/div[3]/div/div/form/div[1]/div[1]/div/div/fieldset[1]/div[3]/div/div/input");
         private IWebElement TxtPhoneNumber => driver.FindElement(PhoneNumber);
 
-        private By Country = By.Id("address_CountryCode_M7kKAQNo7osAAAGBIJglWgq0");
+        private By Country = By.XPath("/html/body/div[3]/div/div/form/div[1]/div[1]/div/div/fieldset[2]/div[1]/div/div/select");
         private IWebElement DdlCountry => driver.FindElement(Country);
 
-        private By County = By.Id("address_State");
+        private By County = By.XPath("/html/body/div[3]/div/div/form/div[1]/div[1]/div/div/fieldset[2]/div[2]/div/div/select");
         private IWebElement DdlCounty => driver.FindElement(County);
 
-        private By City = By.Id("address_City");
+        private By City = By.XPath("/html/body/div[3]/div/div/form/div[1]/div[1]/div/div/fieldset[2]/div[3]/div/div/div/select");
         private IWebElement DdlCity => driver.FindElement(City);
 
-        private By Address = By.Id("address_Address1");
+        private By Address = By.XPath("/html/body/div[3]/div/div/form/div[1]/div[1]/div/div/fieldset[3]/div/div/div/input");
         private IWebElement TxtAddress => driver.FindElement(Address);
 
         private By Save = By.CssSelector("body > div.modal.fade.in > div > div > form > div.modal-footer > button.btn.btn-primary");
@@ -81,28 +82,10 @@ namespace TestingProject
             var btnCookie = driver.FindElement(By.Id("CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll"));
             btnCookie.Click();
 
-            // implicit wait
+            // Implicit wait
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
 
             LoginApplication("test016SM@outlook.com", "test00");
-        }
-
-        public void Fill_Form_Address(AddAddressBO inputData)
-        {
-            TxtLastName.Clear();
-            TxtLastName.SendKeys(inputData.LastName);
-            TxtFirstName.Clear();
-            TxtFirstName.SendKeys(inputData.FirstName);
-            TxtPhoneNumber.Clear();
-            TxtPhoneNumber.SendKeys(inputData.FirstName);
-            TxtAddress.Clear();
-            TxtAddress.SendKeys(inputData.Address);
-            var selectCountry = new SelectElement(DdlCountry);
-            selectCountry.SelectByText(inputData.Country);
-            var selectCounty = new SelectElement(DdlCounty);
-            selectCounty.SelectByText(inputData.County);
-            var selectCity = new SelectElement(DdlCity);
-            selectCity.SelectByText(inputData.City);
         }
 
         [TestMethod]
@@ -112,16 +95,32 @@ namespace TestingProject
             {
                 LastName = "Popa",
                 FirstName = "Ion",
-                PhoneNumber = "12345678",
+                PhoneNumber = "0712345678",
                 Country = "Romania",
                 County = "Iasi",
                 City = "Iasi",
                 Address = "Tudor Vladimirescu 145"
             };
+
             BtnIconAccount.Click();
             BtnAccountAddress.Click();
             BtnNewAddress.Click();
-            Fill_Form_Address(inputData);
+            // Fill Form
+            TxtLastName.Clear();
+            TxtLastName.SendKeys(inputData.LastName);
+            TxtFirstName.Clear();
+            TxtFirstName.SendKeys(inputData.FirstName);
+            TxtPhoneNumber.Clear();
+            TxtPhoneNumber.SendKeys(inputData.PhoneNumber);
+            TxtAddress.Clear();
+            TxtAddress.SendKeys(inputData.Address);
+            var selectCountry = new SelectElement(DdlCountry);
+            selectCountry.SelectByText(inputData.Country);
+            var selectCounty = new SelectElement(DdlCounty);
+            selectCounty.SelectByText(inputData.County);
+            var selectCity = new SelectElement(DdlCity);
+            selectCity.SelectByText(inputData.City);
+            // Save
             BtnSave.Click();
         }
 
@@ -132,16 +131,20 @@ namespace TestingProject
             {
                 LastName = "Florea",
                 FirstName = "Ionel",
-                PhoneNumber = "89525353",
-                Country = "Romania",
-                County = "Vaslui",
-                City = "Vaslui",
+                PhoneNumber = "0789525353",
                 Address = "Tudor Vladimirescu 145"
             };
             BtnIconAccount.Click();
             BtnAccountAddress.Click();
             BtnEditAddress.Click();
-            Fill_Form_Address(inputData);
+            TxtLastName.Clear();
+            TxtLastName.SendKeys(inputData.LastName);
+            TxtFirstName.Clear();
+            TxtFirstName.SendKeys(inputData.FirstName);
+            TxtPhoneNumber.Clear();
+            TxtPhoneNumber.SendKeys(inputData.PhoneNumber);
+            TxtAddress.Clear();
+            TxtAddress.SendKeys(inputData.Address);
             BtnSave.Click();
         }
 

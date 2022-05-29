@@ -2,7 +2,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
-
+using System.Threading;
 
 namespace TestingProject
 {
@@ -10,15 +10,6 @@ namespace TestingProject
     public class CartTests
     {
         private IWebDriver driver;
-
-        private By Email = By.Id("ShopLoginForm_Login");
-        private IWebElement TxtEmail => driver.FindElement(Email);
-
-        private By Password = By.Id("ShopLoginForm_Password");
-        private IWebElement TxtPassword => driver.FindElement(Password);
-
-        private By Login = By.CssSelector("body > div.wrapper > div > div.row.account-login-page > div.col-sm-12.col-md-offset-1.col-md-10.col-lg-offset-2.col-lg-8 > div > div:nth-child(1) > div > form > div:nth-child(5) > div > button");
-        private IWebElement BtnLogin => driver.FindElement(Login);
 
         private By SearchBar = By.CssSelector("#HeaderRow > div.col-md-9.header-search-container-wrapper > div > div.col-md-7.col-lg-8.search-container.header-search-container.hidden-xs.hidden-sm > form > input.form-control.searchTerm.js-has-overlay");
         private IWebElement TxtSearchBar => driver.FindElement(SearchBar);
@@ -35,7 +26,7 @@ namespace TestingProject
         private By IconCart = By.XPath("/html/body/header/div[1]/nav/div/div[4]/div/ul/li[3]/div/a/div");
         private IWebElement BtnIconCart => driver.FindElement(IconCart);
 
-        private By ShowCart = By.XPath("/html/body/header/div[1]/nav/div/div[4]/div/ul/li[3]/div/div[2]/div[2]/a");
+        private By ShowCart = By.XPath("/html/body/header/div[1]/nav/div/div[4]/div/ul/li[3]/div/div[2]/div[3]/a");
         private IWebElement BtnShowCart => driver.FindElement(ShowCart);
 
         private By MyCart = By.XPath("/html/body/div[2]/div/div[11]/div/div[1]/div[1]/h1/span");
@@ -59,15 +50,18 @@ namespace TestingProject
             var btnCookie = driver.FindElement(By.Id("CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll"));
             btnCookie.Click();
 
-            // implicit wait
+            // Implicit wait
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
         }
         [TestMethod]
         public void User_Should_Add_A_Book_In_Cart_Successfully()
         {
+            // Search the book
             TxtSearchBar.SendKeys("carti");
             BtnSearch.Click();
+            Thread.Sleep(2000);
             BtnFirstBook.Click();
+            // Add to the cart
             BtnAddCart.Click();
             BtnIconCart.Click();
             BtnShowCart.Click();
@@ -75,14 +69,20 @@ namespace TestingProject
         }
 
         [TestMethod]
-        public void User_Should_Delete_A_Book_In_Cart_Successfully()
+        public void User_Should_Delete_A_Book_From_Cart_Successfully()
         {
+            // Search the book
+            TxtSearchBar.SendKeys("carti");
+            BtnSearch.Click();
+            BtnFirstBook.Click();
+            // Add to the cart
+            BtnAddCart.Click();
             BtnIconCart.Click();
             BtnShowCart.Click();
+            // Delete the book
             BtnDelete.Click();
             Assert.IsTrue(LblEmptyCart.Text.Contains("NICI UN PRODUS"));
         }
-
 
         [TestCleanup]
         public void TestCleanup()

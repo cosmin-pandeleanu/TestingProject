@@ -35,16 +35,15 @@ namespace TestingProject
         [TestInitialize]
         public void TestInitialize()
         {
-            driver = new ChromeDriver(); // open chrome browser
-
-            driver.Manage().Window.Maximize(); // maximize the window
+            driver = new ChromeDriver(); // Open chrome browser
+            driver.Manage().Window.Maximize(); // Maximize the window
             driver.Navigate().GoToUrl("https://www.elefant.ro/login");
 
             // Click the button for cookies
             var btnCookie = driver.FindElement(By.Id("CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll"));
             btnCookie.Click();
 
-            // implicit wait
+            // Implicit wait
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
         }
 
